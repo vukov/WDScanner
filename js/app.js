@@ -72,7 +72,7 @@ const logDataView = (labelOfDataSource, key, valueDataView) => {
       '\n    (ASCII) ' + asciiString);
 };
 
-const wdlogDataView = (key, valueDataView) => {
+const wdlogDataView = (labelOfDataSource, key, valueDataView) => {
   const raw = [...new Uint8Array(valueDataView.buffer)].map(b => {
     return b.toString(16).padStart(2, '0');
   }).join('');
