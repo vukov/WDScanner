@@ -31,19 +31,21 @@ async function scanForAdvertisements() {
     log(' filters: ' + JSON.stringify(scan.filters));
 */
     navigator.bluetooth.addEventListener('advertisementreceived', event => {
-/*      
+      
       log('Advertisement received.');
       log('  Device Name: ' + event.device.name);
       log('  Device ID: ' + event.device.id);
       log('  RSSI: ' + event.rssi);
       log('  TX Power: ' + event.txPower);
       log('  UUIDs: ' + event.uuids);
-*/
+
       clearLog();
+/*      
       let record = {};
       event.manufacturerData.forEach((valueDataView, key) => {
         record = wdlogDataView('Manufacturer', key, valueDataView);
       });
+*/      
 /*      
       event.serviceData.forEach((valueDataView, key) => {
         logDataView('Service', key, valueDataView);
@@ -74,6 +76,7 @@ const logDataView = (labelOfDataSource, key, valueDataView) => {
       '\n    (ASCII) ' + asciiString);
 };
 
+/*
 const wdlogDataView = (labelOfDataSource, key, valueDataView) => {
   const raw = [...new Uint8Array(valueDataView.buffer)].map(b => {
     return b.toString(16).padStart(2, '0');
@@ -93,7 +96,7 @@ const wdlogDataView = (labelOfDataSource, key, valueDataView) => {
   log('Temp '   + t + ' Hum '  + h + ' Bat ' + b );
   return( { temperature:t, humidity:h, batterylevel:b} );
 }
-
+*/
 
 function log() {
   var line = Array.prototype.slice.call(arguments).map(function(argument) {
