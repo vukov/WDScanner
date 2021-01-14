@@ -20,7 +20,7 @@ const scan_options = {
 
 async function scanForAdvertisements() {
   try {
-    clearLog();
+    //clearLog();
     const scan = await navigator.bluetooth.requestLEScan(scan_options);
 /*
     log('Requesting Bluetooth Scan with options: ' + JSON.stringify(scan_options));
