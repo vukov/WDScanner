@@ -44,7 +44,6 @@ html,
 #log {
   margin: .5em 0;
   white-space: pre-wrap;
-  text-align: left;
 }
 
 #status:empty, #log:empty, #content:empty {
