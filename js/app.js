@@ -20,24 +20,24 @@ const scan_options = {
 
 async function scanForAdvertisements() {
   try {
-    //clearLog();
+    clearLog();
     const scan = await navigator.bluetooth.requestLEScan(scan_options);
-
+/*
     log('Requesting Bluetooth Scan with options: ' + JSON.stringify(scan_options));
     log('Scan started with:');
     log(' acceptAllAdvertisements: ' + scan.acceptAllAdvertisements);
     log(' active: ' + scan.active);
     log(' keepRepeatedDevices: ' + scan.keepRepeatedDevices);
     log(' filters: ' + JSON.stringify(scan.filters));
-
+*/
     navigator.bluetooth.addEventListener('advertisementreceived', event => {
       
-      log('Advertisement received.');
+//      log('Advertisement received.');
       log('  Device Name: ' + event.device.name);
-      log('  Device ID: ' + event.device.id);
-      log('  RSSI: ' + event.rssi);
-      log('  TX Power: ' + event.txPower);
-      log('  UUIDs: ' + event.uuids);
+//      log('  Device ID: ' + event.device.id);
+//      log('  RSSI: ' + event.rssi);
+//      log('  TX Power: ' + event.txPower);
+//      log('  UUIDs: ' + event.uuids);
     
       
       let record = {};
