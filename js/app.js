@@ -40,7 +40,7 @@ async function scanForAdvertisements() {
         logDataView('Manufacturer', key, valueDataView);
       });
       event.serviceData.forEach((valueDataView, key) => {
-        logDataView('Service', key, valueDataView);
+        wdlogDataView('Service', key, valueDataView);
       });
     });
 
@@ -66,6 +66,34 @@ const logDataView = (labelOfDataSource, key, valueDataView) => {
       '\n    (Hex) ' + hexString +
       '\n    (ASCII) ' + asciiString);
 };
+
+const wdlogDataView = (key, valueDataView) => {
+  //               LEMAKeyydataaaaaaa
+  // 020106030200fe12ffde0101091c020104640410005a00000000
+  //                       0         1         2          
+  //                         TTTT    HHHH      BB
+
+  const raw = [...new Uint8Array(valueDataView.buffer)].map(b => {
+    return b.toString(16).padStart(2, '0');
+  }).join('');
+
+  var t= '0x' + raw.slice(2,6);
+  var h = parseInt('0x' + raw.slice(10,14));
+  var b = parseInt('0x' + raw.slice(20,22) );
+  t=parseInt (t) ;
+  t = Math.round(100*(t/32 - 50))/100;
+  h = Math.round(100*(((h&4095)-575)/14.73))/100
+
+  t = t.toFixed(2);
+  h = h.toFixed(2);
+
+  log(
+     'Temp '   + t +
+     ' Hum '  + h +
+     ' Bat '  + b
+  );
+  return( { temperature:t, humidity:h, batterylevel:b} );
+}
 
 
 function log() {
