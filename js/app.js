@@ -20,7 +20,7 @@ const scan_options = {
 
 async function scanForAdvertisements() {
   try {
-    
+    clearLog();
     const scan = await navigator.bluetooth.requestLEScan(scan_options);
 /*
     log('Requesting Bluetooth Scan with options: ' + JSON.stringify(scan_options));
@@ -38,8 +38,7 @@ async function scanForAdvertisements() {
       log('  RSSI: ' + event.rssi);
       log('  TX Power: ' + event.txPower);
       log('  UUIDs: ' + event.uuids);
-
-      clearLog();
+    
 /*      
       let record = {};
       event.manufacturerData.forEach((valueDataView, key) => {
