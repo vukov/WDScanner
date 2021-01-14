@@ -22,14 +22,14 @@ async function scanForAdvertisements() {
   try {
     //clearLog();
     const scan = await navigator.bluetooth.requestLEScan(scan_options);
-/*
+
     log('Requesting Bluetooth Scan with options: ' + JSON.stringify(scan_options));
     log('Scan started with:');
     log(' acceptAllAdvertisements: ' + scan.acceptAllAdvertisements);
     log(' active: ' + scan.active);
     log(' keepRepeatedDevices: ' + scan.keepRepeatedDevices);
     log(' filters: ' + JSON.stringify(scan.filters));
-*/
+
     navigator.bluetooth.addEventListener('advertisementreceived', event => {
       
       log('Advertisement received.');
@@ -39,12 +39,13 @@ async function scanForAdvertisements() {
       log('  TX Power: ' + event.txPower);
       log('  UUIDs: ' + event.uuids);
     
-/*      
+      
       let record = {};
       event.manufacturerData.forEach((valueDataView, key) => {
-        record = wdlogDataView('Manufacturer', key, valueDataView);
+        //record = wdlogDataView('Manufacturer', key, valueDataView);
+        logDataView('Manufacturer', key, valueDataView);
       });
-*/      
+      
 /*      
       event.serviceData.forEach((valueDataView, key) => {
         logDataView('Service', key, valueDataView);
