@@ -42,8 +42,8 @@ async function scanForAdvertisements() {
       
       let record = {};
       event.manufacturerData.forEach((valueDataView, key) => {
-        //record = wdlogDataView('Manufacturer', key, valueDataView);
-        logDataView('Manufacturer', key, valueDataView);
+        record = wdlogDataView('Manufacturer', key, valueDataView);
+        //logDataView('Manufacturer', key, valueDataView);
       });
       
 /*      
@@ -76,7 +76,7 @@ const logDataView = (labelOfDataSource, key, valueDataView) => {
       '\n    (ASCII) ' + asciiString);
 };
 
-/*
+
 const wdlogDataView = (labelOfDataSource, key, valueDataView) => {
   const raw = [...new Uint8Array(valueDataView.buffer)].map(b => {
     return b.toString(16).padStart(2, '0');
@@ -96,7 +96,7 @@ const wdlogDataView = (labelOfDataSource, key, valueDataView) => {
   log('Temp '   + t + ' Hum '  + h + ' Bat ' + b );
   return( { temperature:t, humidity:h, batterylevel:b} );
 }
-*/
+
 
 function log() {
   var line = Array.prototype.slice.call(arguments).map(function(argument) {
