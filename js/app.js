@@ -3,6 +3,11 @@ window.onload = () => {
   console.log("[js/app.js] app.js onload");
 }
 
+let scanButton = document.querySelector('#scanButton');
+// Handle scan button click
+scanButton.addEventListener('click', scanForAdvertisements);
+
+
 let filters = [];
 filters.push({namePrefix: "Fireseatrack"});
 
@@ -13,7 +18,7 @@ const scan_options = {
 };
 
 
-async function onButtonClick() {
+async function scanForAdvertisements() {
   try {
     log('Requesting Bluetooth Scan with options: ' + JSON.stringify(scan_options));
     const scan = await navigator.bluetooth.requestLEScan(scan_options);
@@ -51,7 +56,6 @@ async function onButtonClick() {
 }
 
 /* Utils */
-
 const logDataView = (labelOfDataSource, key, valueDataView) => {
   const hexString = [...new Uint8Array(valueDataView.buffer)].map(b => {
     return b.toString(16).padStart(2, '0');
@@ -64,28 +68,26 @@ const logDataView = (labelOfDataSource, key, valueDataView) => {
 };
 
 
+function log() {
+  var line = Array.prototype.slice.call(arguments).map(function(argument) {
+    return typeof argument === 'string' ? argument : JSON.stringify(argument);
+  }).join(' ');
+  document.querySelector('#log').textContent += line + '\n';
+}
 
-  log: function() {
-      var line = Array.prototype.slice.call(arguments).map(function(argument) {
-        return typeof argument === 'string' ? argument : JSON.stringify(argument);
-      }).join(' ');
+function clearLog() {
+  document.querySelector('#log').textContent = '';
+}
 
-      document.querySelector('#log').textContent += line + '\n';
-    },
+function setStatus(status) {
+  document.querySelector('#status').textContent = status;
+}
 
-    clearLog: function() {
-      document.querySelector('#log').textContent = '';
-    },
-
-    setStatus: function(status) {
-      document.querySelector('#status').textContent = status;
-    },
-
-    setContent: function(newContent) {
-      var content = document.querySelector('#content');
-      while(content.hasChildNodes()) {
-        content.removeChild(content.lastChild);
-      }
-      content.appendChild(newContent);
-    }
-  };
+function setContent(newContent) {
+  var content = document.querySelector('#content');
+  while(content.hasChildNodes()) {
+    content.removeChild(content.lastChild);
+  }
+  content.appendChild(newContent);
+}
+ 
