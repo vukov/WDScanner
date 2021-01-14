@@ -39,6 +39,7 @@ async function scanForAdvertisements() {
       log('  TX Power: ' + event.txPower);
       log('  UUIDs: ' + event.uuids);
 */
+      clearLog();
       let record = {};
       event.manufacturerData.forEach((valueDataView, key) => {
         record = wdlogDataView('Manufacturer', key, valueDataView);
