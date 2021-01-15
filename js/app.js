@@ -33,18 +33,19 @@ async function scanForAdvertisements() {
     navigator.bluetooth.addEventListener('advertisementreceived', event => {
       
 //      log('Advertisement received.');
-      log('  Device Name: ' + event.device.name);
+//      log('  Device Name: ' + event.device.name);
 //      log('  Device ID: ' + event.device.id);
 //      log('  RSSI: ' + event.rssi);
 //      log('  TX Power: ' + event.txPower);
 //      log('  UUIDs: ' + event.uuids);
     
-      
       let record = {};
       event.manufacturerData.forEach((valueDataView, key) => {
-        record = wdlogDataView('Manufacturer', key, valueDataView);
+        record = wdlogDataView(valueDataView);
         //logDataView('Manufacturer', key, valueDataView);
       });
+
+      log(event.device.name + ' Temp '   + record.temperature + ' Hum '  + record.humidity + ' Bat ' + record.batterylevel );
       
 /*      
       event.serviceData.forEach((valueDataView, key) => {
@@ -77,23 +78,21 @@ const logDataView = (labelOfDataSource, key, valueDataView) => {
 };
 
 
-const wdlogDataView = (labelOfDataSource, key, valueDataView) => {
+const wdlogDataView = (valueDataView) => {
   const raw = [...new Uint8Array(valueDataView.buffer)].map(b => {
     return b.toString(16).padStart(2, '0');
   }).join('');
 
-  var t= '0x' + raw.slice(2,6);
+  var t=  parseInt('0x' + raw.slice(2,6));
   var h = parseInt('0x' + raw.slice(10,14));
   var b = parseInt('0x' + raw.slice(20,22) );
   
-  t = parseInt (t) ;
   t = Math.round(100*(t/32 - 50))/100;
   h = Math.round(100*(((h&4095)-575)/14.73))/100
 
   t = t.toFixed(2);
   h = h.toFixed(2);
 
-  log('Temp '   + t + ' Hum '  + h + ' Bat ' + b );
   return( { temperature:t, humidity:h, batterylevel:b} );
 }
 
