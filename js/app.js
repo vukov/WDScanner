@@ -118,7 +118,13 @@ function updateTableHTML(myArray) {
       //console.log("updateTableHTML row: "  + JSON.stringify(row));
 
       var newCell_id = document.createElement("td");
-      newCell_id.textContent = atob(row.device.id);
+      let decodedValue = atob(row.device.id);
+      let hexString = '';
+      for(let cChar = 0; cChar < decodedValue.length; cChar++ ) {
+        let hex = '0'+ decodedValue.charCodeAt(cChar).toString(16);
+        hexString += hex.slice(-2);
+      }
+      newCell_id.textContent = hexString;
       newRow.appendChild(newCell_id);
 
       var newCell_name = document.createElement("td");
