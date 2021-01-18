@@ -124,7 +124,7 @@ function updateTableHTML(myArray) {
         let hex = '0'+ decodedValue.charCodeAt(cChar).toString(16);
         hexString += hex.slice(-2);
       }
-      newCell_id.textContent = hexString;
+      newCell_id.textContent = hexString.slice(0,4) + '\u2026' + hexString.slice(-4);;
       newRow.appendChild(newCell_id);
 
       var newCell_name = document.createElement("td");
