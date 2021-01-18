@@ -9,6 +9,7 @@
   <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon"> 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="./css/bootstrap.min.css">
+
   
   <script src="js/index.js" defer></script>
 
@@ -17,23 +18,106 @@
   <meta name="theme-color" content="white"/>
   
 </head>
+
 <body class="fullscreen">
-  <div class="container">
-    <h1 class="title">WD Scanner</h1>
+  
+  <!-- Navbar tabbed -->
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <a href="#" class="navbar-brand">WD Scanner</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="nav navbar-nav navbar-right">
+        <li role="presentation"><a href="#home" class="nav-link" data-toggle="collapse">Home</a></li>
+          <li role="presentation"><a href="#table" class="nav-link" data-toggle="collapse">Table scan</a></li>
+          <li role="presentation"><a href="#livedata" class="nav-link" data-toggle="collapse">Live data</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <button type="button" class="btn btn-primary" id="scanButton"> Scan </button>
-
-  <h3>Live Output</h3>
-  <div id="output" class="output">
-    <div id="content"></div>
-    <div id="status"></div>
-    <pre class="text-left" id="log"></pre>
+  <!-- Home container -->
+  <div class="container collapse in" id="home">
+    <div class="row">
+       <h1 class="title">WD Scanner</h1>
+    </div>
+    <div class="row">
+      A PWA to scan BLE Weather Disc devices.
+   </div>
   </div>
 
-</div>
+  <!-- Table container -->
+  <div class="container collapse" id="table">
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="scanButton_table"> Scan </button>
+      <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">BTAddr</th>
+              <th scope="col">Name</th>
+              <th scope="col">Temp</th>
+              <th scope="col">Humi</th>
+              <th scope="col">Bat</th>
+            </tr>
+          </thead>
+          <tbody id="table-body-id">
+          </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Live data container -->
+  <div class="container collapse" id="livedata">
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="scanButton_live"> Scan </button>    
+    </div>  
+    <div class="row">  
+      <div id="output" class="text-sm-left"> <!--</div>class="output"> -->
+        <div id="content"></div>
+        <div id="status"></div>
+        <pre class="text-left" id="log"></pre>
+      </div>
+    </div>
+  </div>
+
+    <!-- Raw data container -->
+    <div class="container collapse" id="rawdata">
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="scanButton_live"> Scan </button>    
+      </div>  
+      <div class="row">  
+        <div id="output" class="text-sm-left"> <!--</div>class="output"> -->
+          <div id="content"></div>
+          <div id="status"></div>
+          <pre class="text-left" id="log"></pre>
+        </div>
+      </div>
+    </div>
 
 </body>
 
+<script src="js/jquery-3.4.0.min.js"></script>
+<script src="js/bootstrap.bundle.min.js"></script>
+
+<script src="js/webble.js"></script>
 <script src="js/app.js"></script>
+
+<!-- Navbar tab menu -->
+<script>
+  $(document).ready(function() {
+     $(".container").hide();
+   });
+   
+   $("ul.nav li").click(function() {
+     $("li").removeClass("active");
+     $(this).addClass("active");
+   });
+   
+   $("ul.nav li a").click(function() {
+     var menu = $(this).attr("href");
+     $(".container").hide();
+     $(menu).show();
+   });
+</script>
 
 </html>

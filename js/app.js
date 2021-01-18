@@ -3,87 +3,57 @@ window.onload = () => {
   console.log("[js/app.js] app.js onload");
 }
 
-let scanButton = document.querySelector('#scanButton');
+let scanButton_table = document.querySelector('#scanButton_table');
+let scanButton_live = document.querySelector('#scanButton_live');
 // Handle scan button click
-scanButton.addEventListener('click', scanForAdvertisements);
 
-
-let filters = [];
-filters.push({namePrefix: "Fireseatrack"});
-
-
-const scan_options = {
-    keepRepeatedDevices: true,
-    filters: filters
-};
-
-
-async function scanForAdvertisements() {
-  try {
-    clearLog();
-    const scan = await navigator.bluetooth.requestLEScan(scan_options);
-/*
-    log('Requesting Bluetooth Scan with options: ' + JSON.stringify(scan_options));
-    log('Scan started with:');
-    log(' acceptAllAdvertisements: ' + scan.acceptAllAdvertisements);
-    log(' active: ' + scan.active);
-    log(' keepRepeatedDevices: ' + scan.keepRepeatedDevices);
-    log(' filters: ' + JSON.stringify(scan.filters));
-*/
-    navigator.bluetooth.addEventListener('advertisementreceived', event => {
-      
-//      log('Advertisement received.');
-//      log('  Device Name: ' + event.device.name);
-//      log('  Device ID: ' + event.device.id);
-//      log('  RSSI: ' + event.rssi);
-//      log('  TX Power: ' + event.txPower);
-//      log('  UUIDs: ' + event.uuids);
-    
-      let record = {};
-      event.manufacturerData.forEach((valueDataView, key) => {
-        record = wdlogDataView(valueDataView);
-        //logDataView('Manufacturer', key, valueDataView);
-      });
-
-      log(event.device.name + ' Temp '   + record.temperature + ' Hum '  + record.humidity + ' Bat ' + record.batterylevel );
-      
-/*      
-      event.serviceData.forEach((valueDataView, key) => {
-        logDataView('Service', key, valueDataView);
-      });
-*/      
-    });
-
-    setTimeout(stopScan, 10000);
-    function stopScan() {
-      log('Stopping scan...');
-      scan.stop();
-      log('Stopped.  scan.active = ' + scan.active);
-    }
-  } catch(error)  {
-    log('Argh! ' + error);
-  }
+function locationType(){
+  if( window.location.protocol == 'file:' ){ return 0; }
+  if( !window.location.host.replace( /localhost|127\.0\.0\.1/i, '' ) ){ return 2; }
+  return 1;
 }
 
-/* Utils */
-const logDataView = (labelOfDataSource, key, valueDataView) => {
-  const hexString = [...new Uint8Array(valueDataView.buffer)].map(b => {
-    return b.toString(16).padStart(2, '0');
-  }).join(' ');
-  const textDecoder = new TextDecoder('ascii');
-  const asciiString = textDecoder.decode(valueDataView.buffer);
-  log(`  ${labelOfDataSource} Data: ` + key +
-      '\n    (Hex) ' + hexString +
-      '\n    (ASCII) ' + asciiString);
-};
+if ( locationType() != 0 ) {
+  console.log("running local: fake the ble events");
+  scanButton_table.addEventListener('click', scanForAdvertisementsFake);
+  scanButton_live.addEventListener('click', scanForAdvertisementsFake);
+} else {
+  console.log("running server: using real the ble events");
+  scanButton_live.addEventListener('click', scanForAdvertisements);
+  scanButton_table.addEventListener('click', scanForAdvertisements);
+}  
 
+let sDev = new Map();
 
-const wdlogDataView = (valueDataView) => {
+const handleBLEScanEvent = (evt) => {
+  let id = atob(evt.device.id);
+
+  log('id:' + atob(evt.device.id) + ' Name:' + evt.device.name + " rssi:" + evt.rssi);
+  let record = {};
+
+  evt.manufacturerData.forEach((valueDataView, key) => {
+    // key see https://github.com/dougt/webbluetooth-examples/blob/master/bluetooth_manufacturers.js
+    //log('key:' + key + ' data:' + valueDataView);
+    record = wdlogDataView('Manufacturer', key, valueDataView);
+  });
+
+  evt.record = record
+  // insert and update the entry
+  sDev.set(id,evt);
+
+  //console.log(sDev.size);
+  //console.log(sDev);
+  updateTableHTML(sDev)
+}
+
+const wdlogDataView = (labelOfDataSource, key, valueDataView) => {
   const raw = [...new Uint8Array(valueDataView.buffer)].map(b => {
     return b.toString(16).padStart(2, '0');
   }).join('');
 
-  var t=  parseInt('0x' + raw.slice(2,6));
+  //log('buf:' + valueDataView.buffer);
+  //log('raw:' + raw);
+  var t= parseInt('0x' + raw.slice(2,6));
   var h = parseInt('0x' + raw.slice(10,14));
   var b = parseInt('0x' + raw.slice(20,22) );
   
@@ -93,6 +63,7 @@ const wdlogDataView = (valueDataView) => {
   t = t.toFixed(2);
   h = h.toFixed(2);
 
+  log('Temp '   + t + ' Hum '  + h + ' Bat ' + b );
   return( { temperature:t, humidity:h, batterylevel:b} );
 }
 
@@ -118,5 +89,54 @@ function setContent(newContent) {
     content.removeChild(content.lastChild);
   }
   content.appendChild(newContent);
+}
+
+
+function updateTableHTML(myArray) {
+  var tableBody = document.getElementById("table-body-id");
+
+  // Reset the table
+  tableBody.innerHTML = "";
+
+  // Build the new table
+  myArray.forEach(function(row) {
+      var newRow = document.createElement("tr");
+      tableBody.appendChild(newRow);
+
+      //console.log("updateTableHTML row: "  + JSON.stringify(row));
+
+      var newCell_id = document.createElement("td");
+      newCell_id.textContent = atob(row.device.id);
+      newRow.appendChild(newCell_id);
+
+      var newCell_name = document.createElement("td");
+      newCell_name.textContent = row.device.name;
+      newRow.appendChild(newCell_name);
+
+      var newCell_temp = document.createElement("td");
+      newCell_temp.textContent = row.record.temperature;
+      newRow.appendChild(newCell_temp);
+      
+      var newCell_humi = document.createElement("td");
+      newCell_humi.textContent = row.record.humidity;
+      newRow.appendChild(newCell_humi);
+      
+      var newCell_bat = document.createElement("td");
+      newCell_bat.textContent = row.record.batterylevel;
+      newRow.appendChild(newCell_bat);      
+/*      
+      if (row instanceof Array) {
+          row.forEach(function(cell) {
+              var newCell = document.createElement("td");
+              newCell.textContent = cell;
+              newRow.appendChild(newCell);
+          });
+      } else {
+          newCell = document.createElement("td");
+          newCell.textContent = row;
+          newRow.appendChild(newCell);
+      }
+*/      
+  });
 }
  
