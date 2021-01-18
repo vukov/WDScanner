@@ -7,21 +7,33 @@ let scanButton_table = document.querySelector('#scanButton_table');
 let scanButton_live = document.querySelector('#scanButton_live');
 // Handle scan button click
 
+/*
 function locationType(){
-  if( window.location.protocol == 'file:' ){ return 0; }
-  if( !window.location.host.replace( /localhost|127\.0\.0\.1/i, '' ) ){ return 2; }
-  return 1;
+  let ret = 1
+  console.log("window.location.host " + window.location.host);
+  console.log("window.location.protocol " + window.location.protocol);
+  if( window.location.protocol == 'file:' ){ ret = 0 } else
+  //if( !window.location.host.replace( /localhost|127\.0\.0\.1/i, '' ) ){ ret = 2; } else 
+  if( window.location.host.includes( "127.0.0.1" ) ){ ret = 2; } else 
+  if( window.location.host.includes( "localhost" ) ){ ret = 3; } 
+
+  console.log("includes " + window.location.host.includes( "127.0.0.1" ));
+  console.log("ret " + ret);
+  return ret;
 }
 
-if ( locationType() != 0 ) {
+if ( locationType() != 1 ) {
   console.log("running local: fake the ble events");
   scanButton_table.addEventListener('click', scanForAdvertisementsFake);
   scanButton_live.addEventListener('click', scanForAdvertisementsFake);
-} else {
+} else {  
   console.log("running server: using real the ble events");
+  */
   scanButton_live.addEventListener('click', scanForAdvertisements);
   scanButton_table.addEventListener('click', scanForAdvertisements);
+  /*
 }  
+*/
 
 let sDev = new Map();
 
