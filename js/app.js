@@ -39,7 +39,7 @@ let sDev = new Map();
 
 const handleBLEScanEvent = (evt) => {
   //log('id:' + atob(evt.device.id) + ' Name:' + evt.device.name + " rssi:" + evt.rssi);
-   let decodedValue = atob(row.device.id);
+   let decodedValue = atob(evt.device.id);
       let hexString = '';
       for(let cChar = 0; cChar < decodedValue.length; cChar++ ) {
         let hex = '0'+ decodedValue.charCodeAt(cChar).toString(16);
