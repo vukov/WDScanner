@@ -13,7 +13,7 @@ function locationType(){
   return 1;
 }
 
-if ( locationType() != 0 ) {
+if ( locationType() != 1 ) {
   console.log("running local: fake the ble events");
   scanButton_table.addEventListener('click', scanForAdvertisementsFake);
   scanButton_live.addEventListener('click', scanForAdvertisementsFake);
