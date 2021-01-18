@@ -38,6 +38,7 @@ if ( locationType() != 1 ) {
 let sDev = new Map();
 
 const handleBLEScanEvent = (evt) => {
+  let id = atob(evt.device.id);
   //log('id:' + atob(evt.device.id) + ' Name:' + evt.device.name + " rssi:" + evt.rssi);
    let decodedValue = atob(evt.device.id);
       let hexString = '';
