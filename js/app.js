@@ -38,9 +38,14 @@ if ( locationType() != 1 ) {
 let sDev = new Map();
 
 const handleBLEScanEvent = (evt) => {
-  let id = atob(evt.device.id);
-
-  log('id:' + atob(evt.device.id) + ' Name:' + evt.device.name + " rssi:" + evt.rssi);
+  //log('id:' + atob(evt.device.id) + ' Name:' + evt.device.name + " rssi:" + evt.rssi);
+   let decodedValue = atob(row.device.id);
+      let hexString = '';
+      for(let cChar = 0; cChar < decodedValue.length; cChar++ ) {
+        let hex = '0'+ decodedValue.charCodeAt(cChar).toString(16);
+        hexString += hex.slice(-2);
+      }
+  log('id:' + evt.device.id +',' + atob(evt.device.id) + ',' + hexString );
   let record = {};
 
   evt.manufacturerData.forEach((valueDataView, key) => {
@@ -124,7 +129,7 @@ function updateTableHTML(myArray) {
         let hex = '0'+ decodedValue.charCodeAt(cChar).toString(16);
         hexString += hex.slice(-2);
       }
-      newCell_id.textContent = hexString;
+      newCell_id.textContent = hexString.slice(0,4);
       newRow.appendChild(newCell_id);
 
       var newCell_name = document.createElement("td");
