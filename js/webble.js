@@ -4,6 +4,7 @@
 
 let filters = [];
 filters.push({namePrefix: "Fireseatrack"});
+filters.push({namePrefix: "BLEP_ENV"});
 
 const scan_options = {
     keepRepeatedDevices: true,
